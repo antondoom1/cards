@@ -1,0 +1,12 @@
+.checkbox {
+    background-color: #fff;
+    font: inherit;
+    width: 1.10em;
+    height: 1.10em;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    margin-top: 5px;
+}
+
+.spanClassName {
+}

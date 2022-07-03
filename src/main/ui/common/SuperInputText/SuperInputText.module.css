@@ -1,0 +1,26 @@
+.superInput {
+    font-size: 13px;
+    margin: 10px 2px 0;
+    outline: none;
+    border: 1px solid #002333;
+    padding: 10px 20px;
+    border-radius: 20px;
+    position: relative;
+}
+
+.superInput:focus {
+    border-color: #159A9C;
+}
+
+.errorInput {
+    border: 1px solid red;
+}
+
+.error {
+    color: red;
+    margin: 0;
+}
+
+.inv {
+    visibility: hidden;
+}
