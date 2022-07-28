@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { IconButton, Input, InputAdornment } from '@mui/material';
+import { Box, IconButton, Input, InputAdornment } from '@mui/material';
 import Button from '@mui/material/Button/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
+import { useFormik } from 'formik';
 
-import { useAppDispatch } from '../../../common/hooks/hooks';
-import { Pencil } from '../Icons/Pencil';
+import edit from '../Icons/edit.svg';
 import { changeUserNameTC } from '../profileReducer';
 
 import s from './EditableSpan.module.css';
 
+import { useAppDispatch } from 'common/hooks/hooks';
+import { maxNameLength, minNameLength } from 'constants/minPasswordDigits';
 import { ReturnComponentType } from 'types/ReturnComponentType';
 
 type PropsType = {
@@ -19,40 +21,70 @@ type PropsType = {
 
 export const EditableSpan: React.FC<PropsType> = ({ name }): ReturnComponentType => {
   const [editMode, setEditMode] = useState(false);
-  const [newName, setNewName] = useState(name);
   const dispatch = useAppDispatch();
+  const formik = useFormik({
+    initialValues: { name },
+    validate: value => {
+      const errors: { name?: string } = {};
 
-  const activateEditMode = (): void => {
+      if (value.name.length > maxNameLength) {
+        errors.name = 'The length of the name is too long.';
+      }
+
+      if (value.name.length < minNameLength) {
+        errors.name = 'The length of the name is too short.';
+      }
+
+      return errors;
+    },
+    onSubmit: value => {
+      dispatch(changeUserNameTC(value.name));
+      setEditMode(false);
+    },
+  });
+
+  const onEditMode = (): void => {
     setEditMode(true);
-    setNewName(name);
+    formik.errors.name = '';
+    formik.values.name = name;
   };
 
-  const saveNewName = (): void => {
-    dispatch(changeUserNameTC(newName));
-    setEditMode(false);
-  };
+  useEffect(() => {
+    if (editMode) {
+      window.addEventListener('dblclick', () => setEditMode(false));
+    }
+
+    return window.removeEventListener('dblclick', () => setEditMode(false));
+  }, [editMode]);
 
   return (
-    <div className={s.container}>
+    <Box component="div" className={s.container}>
       {!editMode ? (
-        <span>
+        <Box component="span">
           {name}
-          <IconButton onClick={activateEditMode}>
-            <Pencil />
+          <IconButton onClick={onEditMode}>
+            <Box component="img" src={edit} alt="edit" />
           </IconButton>
-        </span>
+        </Box>
       ) : (
-        <FormControl variant="standard">
-          <InputLabel>Nickname</InputLabel>
+        <FormControl variant="standard" component="form" onSubmit={formik.handleSubmit}>
+          {!formik.errors.name ? (
+            <InputLabel>Nickname</InputLabel>
+          ) : (
+            <InputLabel color="error">{formik.errors.name}</InputLabel>
+          )}
           <Input
-            defaultValue={newName}
-            onChange={e => setNewName(e.currentTarget.value)}
+            name="name"
+            autoFocus
+            defaultValue={name}
+            onChange={formik.handleChange}
             endAdornment={
               <InputAdornment position="end">
                 <Button
+                  type="submit"
                   variant="contained"
                   className={s.saveButton}
-                  onClick={saveNewName}
+                  disabled={!!formik.errors.name || formik.values.name === name}
                 >
                   save
                 </Button>
@@ -61,6 +93,6 @@ export const EditableSpan: React.FC<PropsType> = ({ name }): ReturnComponentType
           />
         </FormControl>
       )}
-    </div>
+    </Box>
   );
 };

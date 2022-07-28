@@ -1,48 +1,44 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
 import { cardsAPI } from 'api/api';
-import { setAppErrorAC, setAppStatusAC } from 'app/appReducer';
+import { setAppError, setAppStatus } from 'app/appReducer';
 import { requestStatus } from 'enums/requestStatus';
+import { loginTC } from 'features/Login/authReducer';
 import { RegisterParamsType } from 'features/Register/RegisterTypes';
-import { AppThunkType } from 'types/AppRootStateTypes';
+import { NewUserType } from 'types/ResponseType';
 
-const initialState = {
-  isRegistered: false,
-};
-
-const slice = createSlice({
-  name: 'registration',
-  initialState,
-  reducers: {
-    confirmRegister: (state, action: PayloadAction<{ isRegistered: boolean }>) => {
-      state.isRegistered = action.payload.isRegistered;
-    },
-  },
-});
-
-export const registerReducer = slice.reducer;
-export const { confirmRegister } = slice.actions;
-
-export const createUser =
-  (data: RegisterParamsType): AppThunkType =>
-  async dispatch => {
+export const createUser = createAsyncThunk(
+  'registration/createUser',
+  async (data: RegisterParamsType, { dispatch }) => {
     try {
-      dispatch(setAppStatusAC({ status: requestStatus.LOADING }));
-      await cardsAPI.register(data);
-      dispatch(confirmRegister({ isRegistered: true }));
-      dispatch(setAppStatusAC({ status: requestStatus.SUCCEEDED }));
+      dispatch(setAppStatus({ status: requestStatus.LOADING }));
+      const res = await cardsAPI.register({ ...data, email: data.email.toLowerCase() });
+
+      dispatch(setAppStatus({ status: requestStatus.SUCCEEDED }));
+      dispatch(loginTC({ ...data, rememberMe: false }));
+
+      return res.data.addedUser;
     } catch (e) {
       const err = e as Error | AxiosError<{ error: string }>;
 
+      dispatch(setAppStatus({ status: requestStatus.FAILED }));
       if (axios.isAxiosError(err)) {
         const error = err.response?.data ? err.response.data.error : err.message;
 
-        dispatch(setAppErrorAC({ error }));
-        dispatch(setAppStatusAC({ status: requestStatus.FAILED }));
-      } else {
-        dispatch(setAppErrorAC({ error: `Native error ${err.message}` }));
-        dispatch(setAppStatusAC({ status: requestStatus.FAILED }));
+        dispatch(setAppError({ error }));
+
+        return;
       }
+      dispatch(setAppError({ error: `Native error ${err.message}` }));
     }
-  };
+  },
+);
+
+const slice = createSlice({
+  name: 'registration',
+  initialState: {} as NewUserType,
+  reducers: {},
+});
+
+export const registerReducer = slice.reducer;
