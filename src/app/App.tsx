@@ -5,13 +5,13 @@ import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 
 import { initializeApp } from 'app/appReducer';
 import { getAppStatus, getInitialized } from 'app/appSelectors';
-import { ErrorSnackbar } from 'common/components/ErrorSnackbar/ErrorSnackbar';
 import { Header } from 'common/components/Header/Header';
-import { Pages } from 'common/components/Pages/Pages';
+import { Helper } from 'common/components/Helper/Helper';
+import { InfoSnackbar } from 'common/components/InfoSnackbar/InfoSnackbar';
+import { RoutesPage } from 'common/components/RoutesPage/RoutesPage';
+import { requestStatus } from 'common/enums/requestStatus';
 import { useAppDispatch, useAppSelector } from 'common/hooks/hooks';
-import { requestStatus } from 'enums/requestStatus';
-import { Helper } from 'features/Helper/Helper';
-import { ReturnComponentType } from 'types/ReturnComponentType';
+import { ReturnComponentType } from 'common/types/ReturnComponentType';
 
 export const App = (): ReturnComponentType => {
   const isInitialized = useAppSelector(getInitialized);
@@ -35,9 +35,9 @@ export const App = (): ReturnComponentType => {
       {status === requestStatus.LOADING && (
         <LinearProgress style={{ position: 'fixed', top: '60px', width: '100%' }} />
       )}
-      <ErrorSnackbar />
+      <InfoSnackbar />
       <Header />
-      <Pages />
+      <RoutesPage />
       <Helper />
     </div>
   );

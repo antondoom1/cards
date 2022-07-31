@@ -1,0 +1,62 @@
+.main {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    margin-left: -207px;
+    width: 348px;
+    height: 451px;
+    text-align: center;
+    padding: 35px 33px 42px;
+}
+
+.title {
+
+}
+
+.checkbox {
+    text-align: left!important;
+}
+
+.linkToPassword {
+    width: 100%;
+    display: inline-block;
+    text-align: right!important;
+    margin-bottom: 20px;
+}
+
+.linkToPassword a {
+    text-decoration: none;
+}
+
+.linkToPassword a:hover {
+    text-decoration: underline;
+}
+
+
+.btn {
+    border-radius: 20px !important;
+}
+
+.text {
+    margin-top: 40px;
+    margin-bottom: 25px;
+}
+
+.linkToRegistration {
+    font-size: large;
+    font-weight: bold;
+}
+
+.linkToRegistration a {
+ text-decoration: none;
+}
+
+.linkToRegistration a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
