@@ -1,0 +1,9 @@
+@import "src/assets/styles/scss/variables";
+@import "src/assets/styles/scss/mixins";
+
+.searchContainer {
+  .title {
+    @include text($montserrat, 14px, 500, 17px);
+    margin: 0 0 8px;
+  }
+}

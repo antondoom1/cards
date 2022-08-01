@@ -4,20 +4,21 @@ import { Avatar, Badge, Box, Button, Card, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography/Typography';
 import { Navigate } from 'react-router-dom';
 
-import s from './Profile.module.css';
-
 import camera from 'assets/images/camera.svg';
 import logout from 'assets/images/logout.svg';
 import { EditableSpan } from 'common/components/EditableSpan/EditableSpan';
 import { path } from 'common/enums/path';
 import { useAppDispatch, useAppSelector } from 'common/hooks/hooks';
 import { ReturnComponentType } from 'common/types/ReturnComponentType';
-import { logOut } from 'features/Auth/Login/authReducer';
+import { logOut } from 'features/Auth/User/Login/authReducer';
+import { getIsLoggedIn } from 'features/Auth/User/Login/authSelectors';
+import s from 'features/Auth/User/Profile/Profile.module.css';
+import { getUser } from 'features/Auth/User/Profile/profileSelectors';
 
 export const Profile = (): ReturnComponentType => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(state => state.profile.user);
-  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+  const user = useAppSelector(getUser);
+  const isLoggedIn = useAppSelector(getIsLoggedIn);
 
   if (!isLoggedIn) {
     return <Navigate to={path.LOGIN} />;

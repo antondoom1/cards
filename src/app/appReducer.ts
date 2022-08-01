@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { userAPI } from 'api/api';
+import { userAPI } from 'api/authAPI';
 import { SnackbarType } from 'app/AppTypes';
 import { requestStatus } from 'common/enums/requestStatus';
 import { snackbarType } from 'common/enums/snackbarType';
 import { handleError } from 'common/utils/handleError';
-import { changeLoggedIn } from 'features/Auth/Login/authReducer';
-import { sendUserDate } from 'features/Profile/profileReducer';
+import { changeLoggedIn } from 'features/Auth/User/Login/authReducer';
+import { sendUserDate } from 'features/Auth/User/Profile/profileReducer';
 
 export const initializeApp = createAsyncThunk(
   'app/initializeApp',
