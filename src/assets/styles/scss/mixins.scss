@@ -1,9 +1,31 @@
 @import './variables';
 
-@mixin text($fontFamily, $fountSize, $fontWeight, $lineHeight) {
-  font-family: $fontFamily !important;
+@mixin text($fountSize, $fontWeight, $lineHeight) {
+  font-family: $montserrat !important;
   font-size: $fountSize;
   font-weight: $fontWeight;
   font-style: normal !important;
   line-height: $lineHeight !important;
+}
+@mixin cardPacks($margin) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: $margin;
+  .left{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    .titleBlock {
+      flex-wrap: wrap;
+      display: flex;
+      align-items: center;
+
+      .title {
+        @include text(22px, 600, 27px);
+
+      }
+    }
+  }
 }

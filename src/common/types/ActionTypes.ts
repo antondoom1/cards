@@ -1,18 +1,24 @@
 import { setAppSnackbarValue, setAppStatus } from 'app/appReducer';
 import { changeThemeAC } from 'app/themeReducer';
-import { changeEmail, changeRedirect } from 'features/Auth/Forgot/forgotReducer';
+import { changeRedirect } from 'features/Auth/Forgot/forgotReducer';
 import { changeLoggedIn } from 'features/Auth/User/Login/authReducer';
 import { sendUserDate } from 'features/Auth/User/Profile/profileReducer';
 import {
-  changeValueMaxCardsCount,
-  changeValueMinCardsCount,
-  changeSearchValue,
+  changeFilterByOwn,
   changePacksPage,
   changePacksPageCount,
+  changeSearchValue,
+  changeValueMaxCardsCount,
+  changeValueMinCardsCount,
   changeValueSortPacks,
-  changeFilterByOwn,
-} from 'features/Cards/Packs/Options/paksOptionsReducer';
-import { setPageNumber, setPageCount } from 'features/Cards/Packs/packsReducer';
+} from 'features/Cards/CardPacks/CardPacksParams/cardPacksParamsReducer';
+import { setPageCount, setPageNumber } from 'features/Cards/CardPacks/cardsPacksReducer';
+import {
+  changeCardPackId,
+  changeCardQuestionSearchValue,
+  changeValueSortCards,
+} from 'features/Cards/Pack/packParams/packParamsReducer';
+import { changePackName } from 'features/Cards/Pack/packReducer';
 
 export type AppActionsType =
   | ReturnType<typeof changeThemeAC>
@@ -20,7 +26,6 @@ export type AppActionsType =
   | ReturnType<typeof sendUserDate>
   | ReturnType<typeof setAppStatus>
   | ReturnType<typeof setAppSnackbarValue>
-  | ReturnType<typeof changeEmail>
   | ReturnType<typeof changeRedirect>
   | ReturnType<typeof changeSearchValue>
   | ReturnType<typeof changeValueMinCardsCount>
@@ -30,4 +35,8 @@ export type AppActionsType =
   | ReturnType<typeof changePacksPageCount>
   | ReturnType<typeof changeFilterByOwn>
   | ReturnType<typeof setPageNumber>
-  | ReturnType<typeof setPageCount>;
+  | ReturnType<typeof changeCardQuestionSearchValue>
+  | ReturnType<typeof changePackName>
+  | ReturnType<typeof changeCardPackId>
+  | ReturnType<typeof setPageCount>
+  | ReturnType<typeof changeValueSortCards>;

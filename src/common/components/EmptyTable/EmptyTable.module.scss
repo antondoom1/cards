@@ -1,0 +1,11 @@
+@import "src/assets/styles/scss/variables";
+@import "src/assets/styles/scss/mixins";
+
+.main {
+  text-align: center;
+  .title {
+    @include text(16px, 400, 20px);
+    margin: 86px auto 32px;
+    opacity: 0.5;
+  }
+}
