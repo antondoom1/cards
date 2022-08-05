@@ -17,7 +17,6 @@ type PropsType = {
 };
 
 export const TopPart: React.FC<PropsType> = React.memo(
-  // eslint-disable-next-line react/prop-types
   ({ headTitle, buttonTitle, items, ownPack, onClickButton, children }) => {
     return (
       <div className={!children ? styles.mainCardPacks : styles.mainPack}>
@@ -25,7 +24,7 @@ export const TopPart: React.FC<PropsType> = React.memo(
           {children && children[0]}
           <div className={styles.titleBlock}>
             <Typography className={styles.title}>{headTitle}</Typography>
-            {children && children[1]}
+            {ownPack && children && children[1]}
           </div>
         </div>
         {ownPack && items && (

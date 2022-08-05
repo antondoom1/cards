@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 
-import Typography from '@mui/material/Typography/Typography';
-import { Navigate, NavLink } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-import back from 'assets/images/Back.svg';
 import del from 'assets/images/delete.svg';
 import edit from 'assets/images/edit.svg';
 import ellipsis from 'assets/images/ellipsis.svg';
+import { BackToCardPacks } from 'common/components/BackToCardPacks/BackToCardPacks';
 import { DataTable } from 'common/components/DataTable/DataTable';
 import { EmptyTable } from 'common/components/EmptyTable/EmptyTable';
 import { OptionMenu } from 'common/components/OptionMenu/OptionMenu';
@@ -19,11 +18,24 @@ import { getLocalStorage } from 'common/utils/localStorageUtil';
 import { getIsLoggedIn } from 'features/Auth/User/Login/authSelectors';
 import { getUserId } from 'features/Auth/User/Profile/profileSelectors';
 import { TopPart } from 'features/Cards/common/components/TopPart';
-import style from 'features/Cards/Pack/Pack.module.scss';
-import { changeCardQuestionSearchValue } from 'features/Cards/Pack/packParams/packParamsReducer';
-import { getPackParams } from 'features/Cards/Pack/packParams/packParamsSelectors';
+import styles from 'features/Cards/Pack/Pack.module.scss';
+import {
+  changeCardQuestionSearchValue,
+  changePageCards,
+  changePageCountCards,
+} from 'features/Cards/Pack/packParams/packParamsReducer';
+import {
+  getPackParams,
+  getPageCount,
+  getPagePackParams,
+} from 'features/Cards/Pack/packParams/packParamsSelectors';
 import { changePackName, loadPack } from 'features/Cards/Pack/packReducer';
-import { getCards, getPackName, getPackUserId } from 'features/Cards/Pack/packSelectors';
+import {
+  getCards,
+  getCardsTotalCount,
+  getPackName,
+  getPackUserId,
+} from 'features/Cards/Pack/packSelectors';
 
 const addCardButtonTitle = 'Add new card';
 
@@ -34,6 +46,12 @@ export const Pack = (): ReturnComponentType => {
   const packName = useAppSelector(getPackName);
   const ownPack = useAppSelector(getUserId) === useAppSelector(getPackUserId);
   const cards = useAppSelector(getCards);
+  const page = useAppSelector(getPagePackParams);
+  const cardsTotalCount = useAppSelector(getCardsTotalCount);
+  const pageCount = useAppSelector(getPageCount);
+  const pageCountNumber = getLocalStorage('pageCount')
+    ? parseInt(getLocalStorage('pageCount') as string, 10)
+    : pageCount;
 
   const menuItems = [
     {
@@ -64,19 +82,32 @@ export const Pack = (): ReturnComponentType => {
   }, []);
 
   useEffect(() => {
-    const cardsPackId = getLocalStorage('cardsPackId');
-    const cardPackName = getLocalStorage('cardsPackName');
+    dispatch(
+      loadPack({
+        ...params,
+        cardsPack_id: getLocalStorage('cardsPackId') as string,
+        pageCount: pageCountNumber,
+      }),
+    );
+    dispatch(
+      changePackName({ cardPackName: getLocalStorage('cardsPackName') as string }),
+    );
+  }, [dispatch, pageCountNumber, params]);
 
-    dispatch(loadPack({ ...params, cardsPack_id: cardsPackId as string }));
-    dispatch(changePackName({ cardPackName: cardPackName as string }));
-  }, [dispatch, params]);
+  const changePageHandler = (page: number): void => {
+    dispatch(changePageCards({ page }));
+  };
+
+  const changePageCountHandler = (pageCount: number): void => {
+    dispatch(changePageCountCards({ pageCount }));
+  };
 
   if (!isLoggedIn) {
     return <Navigate to={path.LOGIN} />;
   }
 
   return (
-    <div className={style.main}>
+    <div className={styles.main}>
       <TopPart
         buttonTitle={addCardButtonTitle}
         headTitle={packName}
@@ -85,10 +116,7 @@ export const Pack = (): ReturnComponentType => {
         ownPack={ownPack}
       >
         {[
-          <NavLink to={path.CARD_PACKS} className={style.link} key={0}>
-            <img src={back} alt="back" className={style.icon} />
-            <Typography className={style.title}>Back to Packs List</Typography>
-          </NavLink>,
+          <BackToCardPacks key={0} />,
           <OptionMenu menuItems={menuItems} key={1}>
             <img src={ellipsis} alt="avatar" />
           </OptionMenu>,
@@ -97,9 +125,17 @@ export const Pack = (): ReturnComponentType => {
       <div />
       {cards.length !== 0 ? (
         <div>
-          <Search callBack={fetchNewSearch} />
+          <div className={styles.search}>
+            <Search callBack={fetchNewSearch} />
+          </div>
           <DataTable tableType="cards" />
-          <Paginator />
+          <Paginator
+            paramsPage={page}
+            cardPacksTotalCount={cardsTotalCount}
+            pageCount={pageCount}
+            changePage={changePageHandler}
+            changePageCount={changePageCountHandler}
+          />
         </div>
       ) : (
         <div>

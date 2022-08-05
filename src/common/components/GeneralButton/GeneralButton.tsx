@@ -15,7 +15,6 @@ type PropsType = {
 };
 
 export const GeneralButton: React.FC<PropsType> = React.memo(
-  // eslint-disable-next-line react/prop-types
   ({ label, disabled, onClick, type, color, fullWidth }): ReturnComponentType => {
     return (
       <Button
