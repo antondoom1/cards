@@ -1,24 +1,17 @@
 @import "src/assets/styles/scss/variables";
 @import "src/assets/styles/scss/mixins";
 
-
 .form {
+  margin-top: 36px;
   margin-left: 24px;
   margin-right: 24px;
-  @include text(18px, 500, 20px);
-
-  .select {
-
-    margin-top: 22px;
-  }
-
-  .input {
-    margin-top: 24px;
-
-  }
+  font-family: 'Montserrat', serif;
+  font-weight: 500;
+  font-size: 14px;
 
   .buttonContainer {
-    margin: 34px 24px 48px;
+    margin-top: 34px;
+    margin-bottom: 48px;
     display: flex;
     justify-content: space-between;
 
