@@ -1,17 +1,17 @@
 export type Order = 'asc' | 'desc';
 
 export type PackData = {
-  packTitle: string;
+  name: string;
   cardsCount: number;
-  updatePackDate: string;
-  creatorName: string;
+  updated: string;
+  user_name: string;
   actions: string;
 };
 
 export type CardData = {
   question: string;
   answer: number;
-  updateCardDate: string;
+  updateDate: string;
   rating: string;
 };
 
@@ -20,7 +20,8 @@ export type DataKeys = keyof PackData | keyof CardData;
 export type HeadCellType = {
   id: keyof PackData | keyof CardData;
   label: string;
-  numeric: boolean;
   isSortable: boolean;
   tableType: 'packs' | 'cards';
+  width: string;
+  isOwner?: boolean;
 };

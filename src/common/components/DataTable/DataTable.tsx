@@ -16,6 +16,7 @@ import {
 } from 'common/components/DataTable/DataTableTypes';
 import { ReturnComponentType } from 'common/types/ReturnComponentType';
 import { sortCardsHelper, sortPacksHelper } from 'common/utils/dataTableSortHelper';
+import { getActualPacksParams } from 'common/utils/getActualParams';
 
 type DataTableProps = {
   tableType: 'packs' | 'cards';
@@ -24,9 +25,14 @@ type DataTableProps = {
 export const DataTable: React.FC<DataTableProps> = ({
   tableType,
 }): ReturnComponentType => {
-  const [order, setOrder] = useState<Order>('desc');
-  const [orderBy, setOrderBy] = useState<DataKeys>('actions');
   const [searchParams, setSearchParams] = useSearchParams();
+  const actualSortUrlValue = getActualPacksParams(searchParams).sortPacks;
+  const [order, setOrder] = useState<Order>(
+    actualSortUrlValue && +actualSortUrlValue[0] === 0 ? 'asc' : 'desc',
+  );
+  const [orderBy, setOrderBy] = useState(
+    actualSortUrlValue ? actualSortUrlValue.substring(1) : 'updated',
+  );
 
   const handleRequestSort = (event: MouseEvent<unknown>, property: DataKeys): void => {
     const isAsc = orderBy === property && order === 'asc';

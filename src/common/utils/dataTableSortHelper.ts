@@ -15,7 +15,7 @@ export const sortPacksHelper = (
 ): void => {
   const queryParams: { sortPacks?: string } = {};
 
-  if (property === 'packTitle') {
+  if (property === 'name') {
     if (order === 'asc') {
       queryParams.sortPacks = sortPacks.ASC_NAME;
     } else {
@@ -31,7 +31,7 @@ export const sortPacksHelper = (
     }
   }
 
-  if (property === 'updatePackDate') {
+  if (property === 'updated') {
     if (order === 'asc') {
       queryParams.sortPacks = sortPacks.ASC_UPDATE;
     } else {
@@ -39,7 +39,7 @@ export const sortPacksHelper = (
     }
   }
 
-  if (property === 'creatorName') {
+  if (property === 'user_name') {
     if (order === 'asc') {
       queryParams.sortPacks = sortPacks.ASC_USER_NAME;
     } else {
@@ -66,7 +66,7 @@ export const sortCardsHelper = (
 ): void => {
   const queryParams: { sortCards?: string } = {};
 
-  if (property === 'updateCardDate') {
+  if (property === 'updateDate') {
     if (order === 'asc') {
       queryParams.sortCards = sortCards.ASC_UPDATE;
     } else {
