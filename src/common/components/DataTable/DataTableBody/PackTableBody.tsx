@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import IconButton from '@mui/material/IconButton/IconButton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-import { PackType } from 'api/cardsRequestTypes';
+import { PackType } from 'api/ResponseTypes';
 import deleteIco from 'assets/images/delete.svg';
 import editIco from 'assets/images/edit.svg';
 import teacherIco from 'assets/images/teacher.svg';
 import s from 'common/components/DataTable/DataTable.module.css';
-import { AddAndEditPackModal } from 'common/components/Modal/AddAndEditPackModal/AddAndEditPackModal';
-import { ModalPackFormTypes } from 'common/components/Modal/AddAndEditPackModal/ModalPackForm/modalPackFormType';
-import { DeletePackModal } from 'common/components/Modal/DeletePackModal/DeletePackModal';
+import { modal } from 'common/enums/modal';
 import { path } from 'common/enums/path';
 import { useAppDispatch, useAppSelector } from 'common/hooks/hooks';
 import { ReturnComponentType } from 'common/types/ReturnComponentType';
-import { setLocalStorage } from 'common/utils/localStorageUtil';
 import { getUserId } from 'features/Auth/User/Profile/profileSelectors';
-import { updatePack } from 'features/Cards/CardPacks/cardsPacksReducer';
+import { setLearnParams } from 'features/Cards/Learn/learnReducer';
+import { openModal } from 'features/Modal/modalReduscer';
 
 type PacksTableBodyProps = {
   pack: PackType;
@@ -27,91 +25,68 @@ type PacksTableBodyProps = {
 export const PackTableBody: React.FC<PacksTableBodyProps> = ({
   pack,
 }): ReturnComponentType => {
-  const updateDate = new Date(pack.updated).toLocaleDateString('ru');
+  const { _id, name, updated, user_name, cardsCount, user_id } = { ...pack };
+  const updateDate = new Date(updated).toLocaleDateString('ru');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [open, setOpen] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const myId = useAppSelector(getUserId);
 
-  const saveTitle = (): void => {
-    setLocalStorage('packName', pack.name);
-  };
-
-  const showCards = (): void => {
-    saveTitle();
-  };
-
   const onClickLearnHandle = (): void => {
-    saveTitle();
-    navigate(`${path.LEARN}?cardsPack_id=${pack._id}&pageCount=${pack.cardsCount}`);
+    navigate(path.LEARN);
+    dispatch(setLearnParams({ cardsPack_id: _id, pageCount: cardsCount }));
   };
-  const updatePackHandler = (values: ModalPackFormTypes): void => {
-    const update = {
-      cardsPack: {
-        _id: pack._id,
-        name: values.namePack,
-        private: values.privatePack,
-      },
-    };
 
-    dispatch(updatePack(update));
+  const updatePackHandler = (): void => {
+    dispatch(
+      openModal({
+        title: modal.EDIT_PACK,
+        data: { _id, name, private: pack.private, loadPacks: true },
+      }),
+    );
+  };
+
+  const deletePackHandler = (): void => {
+    dispatch(
+      openModal({
+        title: modal.DELETE_PACK,
+        data: { _id, name, loadPacks: true },
+      }),
+    );
   };
 
   return (
-    <>
-      <TableRow hover>
-        <TableCell component="th" scope="row">
-          <NavLink
-            to={`${path.PACK}?cardsPack_id=${pack._id}`}
-            className={s.nameLink}
-            onClick={showCards}
-          >
-            {pack.name}
-          </NavLink>
-        </TableCell>
-        <TableCell align="right">{pack.cardsCount}</TableCell>
-        <TableCell align="right">{updateDate}</TableCell>
-        <TableCell align="right">{pack.user_name}</TableCell>
-        <TableCell align="right">
-          <IconButton
-            className={`${s.ico} + ${s.disable}`}
-            onClick={onClickLearnHandle}
-            disabled={pack.cardsCount === 0}
-          >
-            <img src={teacherIco} alt="learn" />
-          </IconButton>
-          <IconButton
-            className={`${s.ico} + ${s.invisible}`}
-            onClick={() => setOpen(true)}
-            disabled={pack.user_id !== myId}
-          >
-            <img src={editIco} alt="edit" />
-          </IconButton>
-          <IconButton
-            className={`${s.ico} + ${s.invisible}`}
-            onClick={() => setOpenDeleteModal(true)}
-            disabled={pack.user_id !== myId}
-          >
-            <img src={deleteIco} alt="delete" />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-      <AddAndEditPackModal
-        callBack={updatePackHandler}
-        handleClose={() => setOpen(false)}
-        open={open}
-        title="Edit pack"
-        editableName={pack.name}
-        editablePrivateStatus={pack.private}
-      />
-      <DeletePackModal
-        packId={pack._id}
-        handleClose={() => setOpenDeleteModal(false)}
-        open={openDeleteModal}
-        title="Delete pack"
-        packName={pack.name}
-      />
-    </>
+    <TableRow hover>
+      <TableCell component="th" scope="row">
+        <NavLink to={`${path.CARDS}?cardsPack_id=${_id}`} className={s.nameLink}>
+          {name}
+        </NavLink>
+      </TableCell>
+      <TableCell align="left">{cardsCount}</TableCell>
+      <TableCell align="left">{updateDate}</TableCell>
+      <TableCell align="left">{user_name}</TableCell>
+      <TableCell align="left">
+        <IconButton
+          className={`${s.ico} + ${s.disable}`}
+          onClick={onClickLearnHandle}
+          disabled={cardsCount === 0}
+        >
+          <img src={teacherIco} alt="learn" />
+        </IconButton>
+        <IconButton
+          className={`${s.ico} + ${s.invisible}`}
+          disabled={user_id !== myId}
+          onClick={updatePackHandler}
+        >
+          <img src={editIco} alt="edit" />
+        </IconButton>
+        <IconButton
+          className={`${s.ico} + ${s.invisible}`}
+          disabled={user_id !== myId}
+          onClick={deletePackHandler}
+        >
+          <img src={deleteIco} alt="delete" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   );
 };

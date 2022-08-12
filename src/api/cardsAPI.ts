@@ -1,42 +1,57 @@
-import { instance } from 'api/authAPI';
 import {
-  CardPacksParamsType,
-  CardPacksResponseType,
+  CardsParamsType,
   CreateCardDataType,
-  CreatePackType,
-  PackParamsType,
-  PackResponseType,
+  CreatePackDataType,
+  PacksParamsType,
+  UpdateCardDataType,
   UpdatedGradeDataType,
-  UpdatedGradeResponseType,
-  UpdatePackType,
-  UpdatePackResponseType,
+  UpdatePackDataType,
+} from 'api/DataTypes';
+import { instance } from 'api/instance';
+import {
+  CardResponseType,
+  CreatePackResponseType,
+  DeleteCardResponseType,
   DeletePackResponseType,
-} from 'api/cardsRequestTypes';
-import { CreateCardResponseType, CreatePackResponseType } from 'api/ResponseTypes';
+  GetCardsResponseType,
+  GetPacksResponseType,
+  UpdateCardResponseType,
+  UpdateGradeResponseType,
+  UpdatePackResponseType,
+} from 'api/ResponseTypes';
 
-export const cardPacksAPI = {
-  getPacks(params: CardPacksParamsType) {
-    return instance.get<CardPacksResponseType>(`cards/pack`, { params });
+export const packAPI = {
+  getPacks(params: PacksParamsType) {
+    return instance.get<GetPacksResponseType>(`cards/pack`, { params });
   },
-  createPack(data: CreatePackType) {
-    return instance.post<CreatePackResponseType>(`cards/pack`, data);
+  createPack(data: CreatePackDataType) {
+    return instance.post<CreatePackResponseType>(`cards/pack`, { cardsPack: data });
   },
-  updatePack(data: UpdatePackType) {
-    return instance.put<UpdatePackResponseType>(`cards/pack`, data);
+  updatePack(data: UpdatePackDataType) {
+    return instance.put<UpdatePackResponseType>(`cards/pack`, { cardsPack: data });
   },
   deletePack(packId: string) {
     return instance.delete<DeletePackResponseType>(`cards/pack?id=${packId}`);
   },
 };
 
-export const packAPI = {
-  getPack(params: PackParamsType) {
-    return instance.get<PackResponseType>('cards/card', { params });
+export const cardAPI = {
+  getCards(params: CardsParamsType) {
+    return instance.get<GetCardsResponseType>('cards/card', { params });
   },
   createCard(data: CreateCardDataType) {
-    return instance.post<CreateCardResponseType>(`cards/card`, { card: data });
+    return instance.post<CardResponseType>(`cards/card`, { card: data });
   },
-  updatedGrade(data: UpdatedGradeDataType) {
-    return instance.put<UpdatedGradeResponseType>('cards/grade', data);
+  updateCard(data: UpdateCardDataType) {
+    return instance.put<UpdateCardResponseType>(`cards/card`, { card: data });
+  },
+  deleteCard(cardId: string) {
+    return instance.delete<DeleteCardResponseType>(`cards/card?id=${cardId}`);
+  },
+};
+
+export const gradeAPI = {
+  updateGrade(data: UpdatedGradeDataType) {
+    return instance.put<UpdateGradeResponseType>('cards/grade', data);
   },
 };

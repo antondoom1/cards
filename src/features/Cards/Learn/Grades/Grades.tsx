@@ -5,7 +5,6 @@ import FormControlLabel from '@mui/material/FormControlLabel/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup/RadioGroup';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { v1 } from 'uuid';
 
 import styles from './Grades.module.scss';
@@ -32,7 +31,7 @@ export const Grades: React.FC<PropsType> = ({ setGrade }): ReturnComponentType =
   return (
     <FormControl className={styles.main}>
       <FormLabel className={styles.rate}>Rate yourself:</FormLabel>
-      <RadioGroup onChange={onChangeRadioHandle}>
+      <RadioGroup onChange={onChangeRadioHandle} defaultValue={1}>
         {grades.map(grade => (
           <FormControlLabel
             key={grade.id}

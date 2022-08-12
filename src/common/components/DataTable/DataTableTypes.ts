@@ -11,8 +11,8 @@ export type PackData = {
 export type CardData = {
   question: string;
   answer: number;
-  updateDate: string;
-  rating: string;
+  updated: string;
+  grade: string;
 };
 
 export type DataKeys = keyof PackData | keyof CardData;

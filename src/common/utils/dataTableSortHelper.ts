@@ -1,6 +1,11 @@
 import { URLSearchParamsInit } from 'react-router-dom';
 
-import { CardData, Order, PackData } from 'common/components/DataTable/DataTableTypes';
+import {
+  CardData,
+  DataKeys,
+  Order,
+  PackData,
+} from 'common/components/DataTable/DataTableTypes';
 import { sortCards } from 'common/enums/sortCards';
 import { sortPacks } from 'common/enums/sortPacks';
 
@@ -66,11 +71,19 @@ export const sortCardsHelper = (
 ): void => {
   const queryParams: { sortCards?: string } = {};
 
-  if (property === 'updateDate') {
+  if (property === 'updated') {
     if (order === 'asc') {
       queryParams.sortCards = sortCards.ASC_UPDATE;
     } else {
       queryParams.sortCards = sortCards.DESC_UPDATE;
+    }
+  }
+
+  if (property === 'grade') {
+    if (order === 'asc') {
+      queryParams.sortCards = sortCards.ASC_GRADE;
+    } else {
+      queryParams.sortCards = sortCards.DESC_GRADE;
     }
   }
 
@@ -80,4 +93,26 @@ export const sortCardsHelper = (
     ...Object.fromEntries(searchParams),
     ...queryParams,
   });
+};
+
+// This functions generates initial sort direction values for the current table from search params (needs after reloading page to save actual data)
+
+export const setCurrentOrder = (searchParams: string): Order => {
+  if (searchParams) {
+    if (+searchParams[0] === 1) {
+      return 'desc';
+    }
+
+    return 'asc';
+  }
+
+  return 'asc';
+};
+
+export const setCurrentOrderBy = (searchParams: string): DataKeys => {
+  if (searchParams) {
+    return searchParams.substring(1) as DataKeys;
+  }
+
+  return 'updated';
 };
