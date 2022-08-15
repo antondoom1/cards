@@ -21,7 +21,7 @@ import {
   getCardPacks,
   getCardPacksTotalCount,
 } from 'features/Cards/Packs/packsSelectors';
-import { openModal } from 'features/Modal/modalReduscer';
+import { openModal } from 'features/Modal/modalReducer';
 
 export const Packs = (): ReturnComponentType => {
   const dispatch = useAppDispatch();
@@ -63,7 +63,7 @@ export const Packs = (): ReturnComponentType => {
     <div className={styles.main}>
       <div className={styles.head}>
         <Typography className={styles.title}>Packs list</Typography>
-        <GeneralButton label="Add new cards" onClick={createNewPack} />
+        <GeneralButton label="Add new pack" onClick={createNewPack} />
       </div>
       <PacksParams />
       <div className={styles.body}>

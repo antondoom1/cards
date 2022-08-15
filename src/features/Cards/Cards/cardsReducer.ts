@@ -8,9 +8,8 @@ import {
   UpdatedGradeDataType,
 } from 'api/DataTypes';
 import { CardType, GetCardsResponseType } from 'api/ResponseTypes';
-import { setAppSnackbarValue, setAppStatus } from 'app/appReducer';
+import { setAppStatus } from 'app/appReducer';
 import { requestStatus } from 'common/enums/requestStatus';
-import { snackbarType } from 'common/enums/snackbarType';
 import { handleError } from 'common/utils/handleError';
 import { updatePack } from 'features/Cards/Packs/packsReducer';
 
@@ -45,15 +44,7 @@ export const createCard = createAsyncThunk(
       await cardAPI.createCard(params.data);
 
       dispatch(setAppStatus({ status: requestStatus.SUCCEEDED }));
-
-      await dispatch(loadCards(params.params));
-
-      dispatch(
-        setAppSnackbarValue({
-          type: snackbarType.SUCCESS,
-          message: `Created new card.`,
-        }),
-      );
+      dispatch(loadCards(params.params));
     } catch (e) {
       handleError(e, dispatch);
 
@@ -74,15 +65,7 @@ export const updateCard = createAsyncThunk(
       await cardAPI.updateCard(params.data);
 
       dispatch(setAppStatus({ status: requestStatus.SUCCEEDED }));
-
-      await dispatch(loadCards(params.params));
-
-      dispatch(
-        setAppSnackbarValue({
-          type: snackbarType.SUCCESS,
-          message: `Card updated.`,
-        }),
-      );
+      dispatch(loadCards(params.params));
     } catch (e) {
       handleError(e, dispatch);
 
@@ -103,15 +86,7 @@ export const deleteCard = createAsyncThunk(
       await cardAPI.deleteCard(params.cardId);
 
       dispatch(setAppStatus({ status: requestStatus.SUCCEEDED }));
-
-      await dispatch(loadCards(params.params));
-
-      dispatch(
-        setAppSnackbarValue({
-          type: snackbarType.SUCCESS,
-          message: `Card deleted.`,
-        }),
-      );
+      dispatch(loadCards(params.params));
     } catch (e) {
       handleError(e, dispatch);
 
@@ -144,6 +119,11 @@ const slice = createSlice({
   initialState: {
     cards: [] as Array<CardType>,
     packUserId: '',
+    packName: '',
+    packPrivate: false,
+    packDeckCover: '',
+    packCreated: '',
+    packUpdated: '',
     page: 0,
     pageCount: 0,
     cardsTotalCount: 0,
@@ -151,7 +131,6 @@ const slice = createSlice({
     maxGrade: 0,
     token: '',
     tokenDeathTime: 0,
-    packName: '',
   } as GetCardsResponseType,
 
   reducers: {},
