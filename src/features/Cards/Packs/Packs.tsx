@@ -39,7 +39,7 @@ export const Packs = (): ReturnComponentType => {
     dispatch(
       openModal({
         title: modal.ADD_PACK,
-        data: { name: '', private: false },
+        data: { name: '', private: false, deckCover: '' },
       }),
     );
   };
@@ -70,7 +70,7 @@ export const Packs = (): ReturnComponentType => {
         {packs.length !== 0 ? (
           <div>
             <DataTable tableType="packs" />
-            <Paginator cardPacksTotalCount={cardPacksTotalCount} />
+            <Paginator totalCount={cardPacksTotalCount} />
           </div>
         ) : (
           <Typography className={styles.title}>

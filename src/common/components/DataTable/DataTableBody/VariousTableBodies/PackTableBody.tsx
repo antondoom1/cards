@@ -16,7 +16,7 @@ import { path } from 'common/enums/path';
 import { useAppDispatch, useAppSelector } from 'common/hooks/hooks';
 import { ReturnComponentType } from 'common/types/ReturnComponentType';
 import { getUserId } from 'features/Auth/User/Profile/profileSelectors';
-import { setLearnParams } from 'features/Cards/Learn/learnReducer';
+import { loadCards } from 'features/Cards/Cards/cardsReducer';
 import { openModal } from 'features/Modal/modalReducer';
 
 type PacksTableBodyProps = {
@@ -32,16 +32,16 @@ export const PackTableBody: React.FC<PacksTableBodyProps> = ({
   const dispatch = useAppDispatch();
   const myId = useAppSelector(getUserId);
 
-  const onClickLearnHandle = (): void => {
+  const onClickLearnHandle = async (): Promise<void> => {
+    await dispatch(loadCards({ cardsPack_id: _id, pageCount: cardsCount }));
     navigate(path.LEARN);
-    dispatch(setLearnParams({ cardsPack_id: _id, pageCount: cardsCount }));
   };
 
   const updatePackHandler = (): void => {
     dispatch(
       openModal({
         title: modal.EDIT_PACK,
-        data: { _id, name, private: pack.private, loadPacks: true },
+        data: { _id, name, private: pack.private, loadPacks: true, deckCover },
       }),
     );
   };
@@ -55,7 +55,7 @@ export const PackTableBody: React.FC<PacksTableBodyProps> = ({
     );
   };
 
-  const showDeckCoverImage = (): ReactElement | undefined => {
+  const showDeckCoverIfAvailable = (): ReactElement | undefined => {
     const countOfSymbols = 11;
 
     if (deckCover) {
@@ -71,7 +71,7 @@ export const PackTableBody: React.FC<PacksTableBodyProps> = ({
     <TableRow hover>
       <TableCell>
         <Box component="span" className={s.deckCoverContainer}>
-          {showDeckCoverImage()}
+          {showDeckCoverIfAvailable()}
         </Box>
       </TableCell>
       <TableCell padding="none">

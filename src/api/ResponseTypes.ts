@@ -44,7 +44,7 @@ export type PackType = {
   updated: string;
   more_id: string;
   __v: number;
-  deckCover: string | null;
+  deckCover: string;
 };
 export type GetPacksResponseType = {
   cardPacks: Array<PackType>;
@@ -122,6 +122,15 @@ export type UpdatedGradeType = {
 };
 export type UpdateGradeResponseType = {
   updatedGrade: UpdatedGradeType;
+} & TokenType;
+
+export type GetUsersResponseType = {
+  users: Array<Omit<UserType, 'rememberMe' | '__v'>>;
+  page: number;
+  pageCount: number;
+  usersTotalCount: number;
+  minPublicCardPacksCount: number;
+  maxPublicCardPacksCount: number;
 } & TokenType;
 
 type TokenType = {
