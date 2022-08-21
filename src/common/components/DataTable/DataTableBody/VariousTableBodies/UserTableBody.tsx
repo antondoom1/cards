@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import { Box } from '@mui/material';
+import { Avatar } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
@@ -19,16 +19,14 @@ export const UserTableBody: React.FC<UserTableBodyProps> = ({
 
     if (user.avatar) {
       if (user.avatar.substring(0, countOfSymbols) === 'data:image/') {
-        return (
-          <Box sx={{ height: '50px' }} component="img" src={user.avatar} alt="avatar" />
-        );
+        return <Avatar sx={{ margin: 'auto' }} src={user.avatar} alt="avatar" />;
       }
     }
   };
 
   return (
     <TableRow hover>
-      <TableCell>{showUserAvatarIfAvailable()}</TableCell>
+      <TableCell padding="none">{showUserAvatarIfAvailable()}</TableCell>
       <TableCell padding="none">{user.name}</TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>{user.publicCardPacksCount}</TableCell>
